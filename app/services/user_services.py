@@ -22,10 +22,6 @@ class UserService:
         """Busca usuário pelo ID"""
         return self.db.query(GlpiUser).filter(GlpiUser.id == user_id).first()
 
-    def get_user_by_email(self, email: str) -> Optional[GlpiUser]:
-        """Busca usuário pelo email"""
-        return self.db.query(GlpiUser).filter(GlpiUser.email == email).first()
-
     def get_user_by_phone(self, phone: str) -> Optional[GlpiUser]:
         """Busca usuário pelo telefone"""
         return self.db.query(GlpiUser).filter(GlpiUser.phone == phone).first()

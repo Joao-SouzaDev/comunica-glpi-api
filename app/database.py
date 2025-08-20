@@ -10,8 +10,8 @@ import os
 
 # Configuração por variáveis de ambiente para MySQL
 DB_TYPE = os.getenv("DB_TYPE", "mysql+pymysql")
-DB_USER = os.getenv("DB_USER", "glpiuser")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "glpipass")
+DB_USER = os.getenv("DB_USER", "userglpi")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "9pY_XGqULagx58P!")
 DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_PORT = os.getenv("DB_PORT", "3306")
 DB_NAME = os.getenv("DB_NAME", "glpidb")

@@ -1,5 +1,5 @@
 """
-Modelo SQLAlchemy para a tabela glpi_user
+Modelo SQLAlchemy para a tabela glpi_users
 """
 
 from sqlalchemy import Column, Integer, String
@@ -8,13 +8,11 @@ from app.database import Base
 
 
 class GlpiUser(Base):
-    __tablename__ = "glpi_user"
+    __tablename__ = "glpi_users"
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False)
-    email = Column(String(255), unique=True, nullable=False)
     phone = Column(String(50), unique=True, nullable=True)
-    profile = Column(String(100), nullable=True)
     # Adicione outros campos conforme necessário
 
     def __repr__(self):
