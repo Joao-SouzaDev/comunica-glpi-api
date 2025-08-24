@@ -9,7 +9,6 @@ __pycache__/
 *.eggs
 *.env
 .env
-.env.*
 *.sqlite3
 *.db
 

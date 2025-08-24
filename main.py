@@ -4,7 +4,7 @@ Main application entry point
 """
 
 from fastapi import FastAPI
-from app.routers import chamados, health, user
+from app.routers import chamados, health, notificacao, user
 from app.auth.auth_handler import get_api_key
 
 # Initialize FastAPI app
@@ -20,6 +20,7 @@ app = FastAPI(
 app.include_router(health.router, prefix="/api/v1", tags=["Health"])
 app.include_router(chamados.router, prefix="/api/v1", tags=["Chamados"])
 app.include_router(user.router, prefix="/api/v1", tags=["Usuários"])
+app.include_router(notificacao.router, prefix="/api/v1", tags=["Notificação"])
 
 
 @app.get("/")
