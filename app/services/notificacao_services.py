@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import hashlib
 
 load_dotenv()
-
+logging.basicConfig(level=logging.INFO)
 CHATWOOT_API_URL = os.getenv("CHATWOOT_API_URL")
 CHATWOOT_API_TOKEN = os.getenv("CHATWOOT_API_TOKEN")
 CHATWOOT_ACCOUNT_ID = os.getenv("CHATWOOT_ACCOUNT_ID")
@@ -20,13 +20,21 @@ def buscar_contato_por_telefone(phone_number):
     url = f"{CHATWOOT_API_URL}/api/v1/accounts/{CHATWOOT_ACCOUNT_ID}/contacts/search"
     params = {"q": phone_number}
     response = requests.get(url, headers=HEADERS, params=params)
-    logging.warning(
+    logging.info(
         f"Chatwoot API response: {response.status_code} | request: {response.request.url}"
     )
     if response.status_code == 200:
         data = response.json()
         if data.get("payload"):
-            return data["payload"][0] if data["payload"] else None
+            contato_id = data["payload"][0]["id"]
+            data_return = {
+                "id": contato_id,
+                "name": data["payload"][0]["name"],
+                "phone_number": data["payload"][0]["phone_number"],
+                "email": data["payload"][0].get("email"),
+            }
+            logging.info(f"Contato encontrado: {contato_id}")
+            return data_return
         return None
     else:
         response.raise_for_status()
