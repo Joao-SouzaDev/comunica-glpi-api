@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.glpi.db
+.env
+.git
+.gitignore
+Dockerfile
+.dockerignore
+README.md
+USAGE.md
