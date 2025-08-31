@@ -3,11 +3,15 @@ Chamados (Tickets) router
 Handles all ticket-related operations with authentication
 """
 
-from fastapi import APIRouter, Depends, HTTPException, status
+import logging
+from fastapi import APIRouter, Depends
 from typing import Dict, List, Any
 from app.auth.auth_handler import get_api_key
+from app.services.ticket_services import TicketServices
 
 router = APIRouter()
+ticket_services = TicketServices()
+logging.basicConfig(level=logging.INFO)
 
 
 @router.get("/chamados")
@@ -73,63 +77,18 @@ async def criar_chamado(
     Returns:
         Dict: Created ticket information
     """
-    # Placeholder implementation
+    logging.info(f"Criando chamado com dados: {chamado_data}")
+    response = ticket_services.create_ticket(chamado_data)
+
+    if isinstance(response, dict) and "error" in response:
+        return {
+            "message": "Erro ao criar chamado",
+            "error": response["error"],
+            "authenticated": True,
+        }
+
     return {
         "message": "Chamado criado com sucesso",
-        "data": {
-            "id": 12345,
-            "titulo": chamado_data.get("titulo", "Novo chamado"),
-            "status": "Aberto",
-        },
-        "authenticated": True,
-    }
-
-
-@router.put("/chamados/{chamado_id}")
-async def atualizar_chamado(
-    chamado_id: int, chamado_data: Dict[str, Any], token: str = Depends(get_api_key)
-) -> Dict[str, Any]:
-    """
-    Atualiza um chamado existente
-    Requires authentication
-
-    Args:
-        chamado_id: ID do chamado
-        chamado_data: Novos dados do chamado
-        token: API token (injected by dependency)
-
-    Returns:
-        Dict: Updated ticket information
-    """
-    # Placeholder implementation
-    return {
-        "message": f"Chamado {chamado_id} atualizado com sucesso",
-        "data": {
-            "id": chamado_id,
-            "titulo": chamado_data.get("titulo", "Chamado atualizado"),
-            "status": "Atualizado",
-        },
-        "authenticated": True,
-    }
-
-
-@router.delete("/chamados/{chamado_id}")
-async def excluir_chamado(
-    chamado_id: int, token: str = Depends(get_api_key)
-) -> Dict[str, Any]:
-    """
-    Exclui um chamado
-    Requires authentication
-
-    Args:
-        chamado_id: ID do chamado
-        token: API token (injected by dependency)
-
-    Returns:
-        Dict: Deletion confirmation
-    """
-    # Placeholder implementation
-    return {
-        "message": f"Chamado {chamado_id} excluído com sucesso",
+        "data": response,
         "authenticated": True,
     }

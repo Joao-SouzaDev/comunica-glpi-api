@@ -1,19 +1,31 @@
-from services import glpi_services
-from typing import Any, Dict, Optional
+from app.services.glpi_services import GLPIService
+from typing import Any, Dict
 
 
-class TicketServices(glpi_services.GLPIService):
+class TicketServices(GLPIService):
     def __init__(self):
         super().__init__()
 
     def create_ticket(self, ticket_data: Dict[str, Any]) -> Any:
-        return self.post("ticket", data=ticket_data)
+        try:
+            return self.post("Ticket", data=ticket_data)
+        except Exception as e:
+            return {"error": str(e)}
 
     def get_ticket(self, ticket_id: int) -> Any:
-        return self.get(f"ticket/{ticket_id}")
+        try:
+            return self.get(f"Ticket/{ticket_id}")
+        except Exception as e:
+            return {"error": str(e)}
 
     def update_ticket(self, ticket_id: int, ticket_data: Dict[str, Any]) -> Any:
-        return self.put(f"ticket/{ticket_id}", data=ticket_data)
+        try:
+            return self.put(f"Ticket/{ticket_id}", data=ticket_data)
+        except Exception as e:
+            return {"error": str(e)}
 
     def delete_ticket(self, ticket_id: int) -> Any:
-        return self.delete(f"ticket/{ticket_id}")
+        try:
+            return self.delete(f"Ticket/{ticket_id}")
+        except Exception as e:
+            return {"error": str(e)}
