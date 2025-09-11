@@ -10,3 +10,9 @@ services:
       - "3030:3030"
     volumes:
       - .:/app
+    networks:
+      - glpi_network
+      
+networks:
+  glpi_network:
+    driver: bridge
