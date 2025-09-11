@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.INFO)
 CHATWOOT_API_URL = os.getenv("CHATWOOT_API_URL")
 CHATWOOT_API_TOKEN = os.getenv("CHATWOOT_API_TOKEN")
 CHATWOOT_ACCOUNT_ID = os.getenv("CHATWOOT_ACCOUNT_ID")
-
+CHATWOOT_INBOX_ID = os.getenv("CHATWOOT_INBOX_ID")
 HEADERS = {"Content-Type": "application/json", "api_access_token": CHATWOOT_API_TOKEN}
 
 
@@ -62,8 +62,7 @@ def iniciar_conversa(contact_id, inbox_id=None, additional_attributes=None):
     url = f"{CHATWOOT_API_URL}/api/v1/accounts/{CHATWOOT_ACCOUNT_ID}/conversations"
     source_id = hashlib.sha256(str(contact_id).encode()).hexdigest()
     payload = {"contact_id": contact_id, "source_id": source_id}
-    if inbox_id:
-        payload["inbox_id"] = inbox_id
+    payload["inbox_id"] = CHATWOOT_INBOX_ID
     if additional_attributes:
         payload["additional_attributes"] = additional_attributes
     response = requests.post(url, headers=HEADERS, json=payload)
