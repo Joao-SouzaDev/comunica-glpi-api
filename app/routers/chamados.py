@@ -61,11 +61,23 @@ async def obter_chamado(
             ),
             "authenticated": True,
         }
+    data_chamado["data"]["status"] = enumerate_status(data_chamado["data"]["status"])
     return {
         "message": "Chamado encontrado",
         "data": data_chamado,
         "authenticated": True,
     }
+
+
+def enumerate_status(status_code: int) -> str:
+    status_mapping = {
+        1: "novo",
+        2: "Em andamento",
+        3: "Fechado",
+        4: "Pendente",
+        5: "Resolvido",
+    }
+    return status_mapping.get(status_code, "Desconhecido")
 
 
 @router.post("/chamados")
