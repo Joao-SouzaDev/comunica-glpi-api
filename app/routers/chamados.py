@@ -51,6 +51,11 @@ async def obter_chamado(
         Dict: Ticket details
     """
     data_chamado = ticket_services.get_ticket(chamado_id)
+
+    # Log para debug da estrutura dos dados
+    logging.info(f"Dados retornados da API GLPI: {data_chamado}")
+    logging.info(f"Tipo dos dados: {type(data_chamado)}")
+
     if data_chamado is None or (
         isinstance(data_chamado, dict) and "error" in data_chamado
     ):
@@ -61,7 +66,24 @@ async def obter_chamado(
             ),
             "authenticated": True,
         }
-    data_chamado["data"]["status"] = enumerate_status(data_chamado["data"]["status"])
+
+    # Verifica a estrutura dos dados retornados e processa o status
+    if isinstance(data_chamado, dict):
+        # Se existe uma chave "data" com os dados do ticket
+        if "data" in data_chamado and isinstance(data_chamado["data"], dict):
+            status_code = data_chamado["data"].get("status", 0)
+            data_chamado["data"]["status"] = enumerate_status(status_code)
+        # Se os dados estão diretamente no objeto retornado
+        elif "status" in data_chamado:
+            status_code = data_chamado.get("status", 0)
+            data_chamado["status"] = enumerate_status(status_code)
+        # Se o retorno é uma lista (alguns endpoints do GLPI retornam arrays)
+        elif isinstance(data_chamado, list) and len(data_chamado) > 0:
+            for item in data_chamado:
+                if isinstance(item, dict) and "status" in item:
+                    status_code = item.get("status", 0)
+                    item["status"] = enumerate_status(status_code)
+
     return {
         "message": "Chamado encontrado",
         "data": data_chamado,
@@ -71,7 +93,7 @@ async def obter_chamado(
 
 def enumerate_status(status_code: int) -> str:
     status_mapping = {
-        1: "novo",
+        1: "Novo",
         2: "Em andamento",
         3: "Fechado",
         4: "Pendente",
