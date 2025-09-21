@@ -50,14 +50,20 @@ async def obter_chamado(
     Returns:
         Dict: Ticket details
     """
-    # Placeholder implementation
+    data_chamado = ticket_services.get_ticket(chamado_id)
+    if data_chamado is None or (
+        isinstance(data_chamado, dict) and "error" in data_chamado
+    ):
+        return {
+            "message": "Chamado não encontrado",
+            "error": (
+                data_chamado.get("error") if isinstance(data_chamado, dict) else None
+            ),
+            "authenticated": True,
+        }
     return {
-        "message": f"Detalhes do chamado {chamado_id}",
-        "data": {
-            "id": chamado_id,
-            "titulo": "Chamado exemplo",
-            "status": "Em andamento",
-        },
+        "message": "Chamado encontrado",
+        "data": data_chamado,
         "authenticated": True,
     }
 
