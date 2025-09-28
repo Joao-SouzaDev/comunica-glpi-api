@@ -132,3 +132,38 @@ async def criar_chamado(
         "data": response,
         "authenticated": True,
     }
+
+
+@router.post("/chamados/followup")
+async def adicionar_followup(
+    followup_data: Dict[str, Any], token: str = Depends(get_api_key)
+) -> Dict[str, Any]:
+    """
+    Adiciona um follow-up a um chamado existente
+    Requires authentication
+
+    Args:
+        chamado_id: ID do chamado ao qual o follow-up será adicionado
+        followup_data: Dados do follow-up a ser adicionado
+        token: API token (injected by dependency)
+
+    Returns:
+        Dict: Follow-up information
+    """
+    logging.info(
+        f"Adicionando follow-up ao chamado {followup_data.get('items_id')} com dados: {followup_data}"
+    )
+    response = ticket_services.add_followup(followup_data)
+
+    if isinstance(response, dict) and "error" in response:
+        return {
+            "message": "Erro ao adicionar follow-up",
+            "error": response["error"],
+            "authenticated": True,
+        }
+
+    return {
+        "message": "Follow-up adicionado com sucesso",
+        "data": response,
+        "authenticated": True,
+    }

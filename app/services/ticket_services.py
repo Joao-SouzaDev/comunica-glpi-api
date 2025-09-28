@@ -29,3 +29,9 @@ class TicketServices(GLPIService):
             return self.delete(f"Ticket/{ticket_id}")
         except Exception as e:
             return {"error": str(e)}
+
+    def add_followup(self, followup_data: Dict[str, Any]) -> Any:
+        try:
+            return self.post(f"ITILFollowup", data=followup_data)
+        except Exception as e:
+            return {"error": str(e)}
