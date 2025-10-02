@@ -3,27 +3,28 @@ import os
 import requests
 from typing import Any, Dict, Optional
 from dotenv import load_dotenv
+from requests.auth import HTTPBasicAuth
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
 GLPI_API_URL = os.getenv("GLPI_API_URL")
 GLPI_APP_TOKEN = os.getenv("GLPI_APP_TOKEN")
-GLPI_USER_TOKEN = os.getenv("GLPI_USER_TOKEN")
+GLPI_USERNAME = os.getenv("GLPI_USERNAME")
+GLPI_PASSWORD = os.getenv("GLPI_PASSWORD")
 
 
 class GLPIService:
     def __init__(self):
         self.api_url = GLPI_API_URL
         self.app_token = GLPI_APP_TOKEN
-        self.user_token = GLPI_USER_TOKEN
+        self.username = GLPI_USERNAME
+        self.password = GLPI_PASSWORD
         self.session_token: Optional[str] = None
 
     def _get_headers(self, with_session: bool = True) -> Dict[str, str]:
         headers = {"App-Token": self.app_token, "Content-Type": "application/json"}
         if with_session and self.session_token:
             headers["Session-Token"] = self.session_token
-        elif not with_session:
-            headers["Authorization"] = f"user_token {self.user_token}"
         return headers
 
     def init_session(self) -> None:
@@ -31,11 +32,11 @@ class GLPIService:
         logging.info(f"Initializing session with URL: {url}")
         headers = {
             "App-Token": self.app_token,
-            "Authorization": f"user_token {self.user_token}",
         }
+        auth = HTTPBasicAuth(self.username, self.password)
         response = None
         try:
-            response = requests.get(url, headers=headers)
+            response = requests.get(url, headers=headers, auth=auth)
             response.raise_for_status()
             self.session_token = response.json().get("session_token")
         except requests.RequestException as e:

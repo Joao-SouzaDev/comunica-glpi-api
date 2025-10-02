@@ -79,11 +79,24 @@ uvicorn main:app --host 0.0.0.0 --port 8000
 
 ## Autenticação
 
+### Autenticação da API (FastAPI)
 A API utiliza autenticação por Bearer Token. Para acessar os endpoints protegidos, inclua o token no header:
 
 ```
 Authorization: Bearer glpi-api-token-2025-permanent
 ```
+
+### Autenticação com GLPI
+A comunicação com a API do GLPI utiliza **Basic Authentication**. Configure as credenciais no arquivo `.env`:
+
+```bash
+GLPI_API_URL=https://your-glpi-instance.com/apirest.php
+GLPI_APP_TOKEN=your-glpi-app-token
+GLPI_USERNAME=your-glpi-username
+GLPI_PASSWORD=your-glpi-password
+```
+
+O sistema utiliza as credenciais (username e password) para inicializar uma sessão com o GLPI e obter um session token para as requisições subsequentes.
 
 ## Documentação
 
